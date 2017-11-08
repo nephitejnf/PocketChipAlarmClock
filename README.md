@@ -1,7 +1,5 @@
-![icon](https://dl.dropboxusercontent.com/s/7iz5ono4npkquvq/SnowAlarmVC66aA02a.png)
 <br>
-<br>
-# An alarm clock that shuts off on snow days
+# A custom alarm clock
 Created in Python using Tkinter, pygame, pytz, and tzlocal
 <br>
 <br>
