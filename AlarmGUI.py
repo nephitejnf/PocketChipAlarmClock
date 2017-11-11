@@ -1,6 +1,6 @@
-import tkFont
 import urllib
-from Tkinter import *
+from tkinter import *
+from tkinter.font import Font as tkFont
 import time
 from datetime import datetime
 from pytz import timezone
@@ -17,49 +17,8 @@ snowHour = 0
 snowMinute = 0
 snowMeridiem = "AM"
 tz = get_localzone()
-school = ""
-website=""
+alarmLocation = "LukHash_-_ARCADE_JOURNEYS.mp3"
 
-def set_school():
-  global setSchoolDialog
-  setSchoolDialog = Tk()
-  school_label = Label(setSchoolDialog, text = "School: ")
-  school_label.pack(fill = Y, side = LEFT)
-  global school_input
-  school_input = Entry(setSchoolDialog, width = 30)
-  school_input.pack(fill = Y, side = LEFT)
-  done_button = Button(setSchoolDialog, text = "Enter", command = set_school_click)
-  done_button.pack()
-  
-def set_school_click():
-  openFile = open("pref.dat", "r")
-  data = openFile.readlines()
-  data[0] = school_input.get() + "\n"
-  openFile.close()
-  with open("pref.dat", "w") as file:
-    file.writelines(data)
-  setSchoolDialog.destroy()
-
-def set_website():
-  global setWebsiteDialog
-  setWebsiteDialog = Tk()
-  website_label = Label(setWebsiteDialog, text = "Website: ")
-  website_label.pack(fill = Y, side = LEFT)
-  global website_input
-  website_input = Entry(setWebsiteDialog, width = 30)
-  website_input.pack(fill = Y, side = LEFT)
-  done_button = Button(setWebsiteDialog, text = "Enter", command = set_website_click)
-  done_button.pack()
-  
-def set_website_click():
-  openFile = open("pref.dat", "r")
-  data = openFile.readlines()
-  data[1] = website_input.get()
-  openFile.close()
-  with open("pref.dat", "w") as file:
-    file.writelines(data)
-  setWebsiteDialog.destroy()
-  
 def stop_alarm(event = None):
   setHour = -1    #Prevents alarm from keep going off
   pygame.mixer.music.stop()
@@ -69,7 +28,7 @@ def get_time():
   hour = datetime.now(timezone(str(tz))).hour
   minute = datetime.now(timezone(str(tz))).minute
   second = datetime.now(timezone(str(tz))).second
-  
+
   global setHour
   global setMinute
   global setSeconds
@@ -77,7 +36,7 @@ def get_time():
   global snowHour
   global snowMinute
   global snowMeridiem
-    
+
   if hour > 12:
     hour = hour - 12
     meridiem = "PM"
@@ -88,13 +47,6 @@ def get_time():
     meridiem = "AM"
   else:
     meridiem = "AM"
-
-  if hour == snowHour and minute == snowMinute and second == 0 and snowMeridiem == set_meridiem:
-    sock = urllib.urlopen(webstie)
-    html_source = sock.read()
-    sock.close()
-    if html_source.find(school) != -1:
-      setHour = -1
 
   if hour == setHour and minute == setMinute and second == setSeconds and set_meridiem == meridiem:
     setHour = -1
@@ -109,7 +61,7 @@ master = Tk()
 master.wm_title("Snow Alarm")
 master.bind("<space>", stop_alarm)
 frame = Frame(master)
-helv46 = tkFont.Font(size = 46)
+helv46 = tkFont(size = 46)
 time_label = Label(frame, text = get_time, font = helv46)
 #Create file if it doesn't exist
 openPrefs = open("pref.dat", "a")
@@ -138,7 +90,7 @@ def alarm():
   global setHour
   setHour = -1
   pygame.mixer.init()
-  pygame.mixer.music.load("alarm.wav")
+  pygame.mixer.music.load(alarmLocation)
   pygame.mixer.music.play(-1)
   while pygame.mixer.music.get_busy() == True:
     continue
@@ -189,7 +141,7 @@ def click():
   else:
     snowMinute = setMinute - 2
     snowHour = setHour
-  
+
   if setHour == 12 and setMinute == 0 or setMinute == 1:
     snowMeridiem = "AM" if set_meridiem == "PM" else "PM"
   else:
@@ -208,8 +160,6 @@ button.pack(fill = BOTH, expand = 1)
 #Create option menu
 menubar = Menu(master)    #Main menu
 settings_menu = Menu(menubar, tearoff=0) #cascading options
-settings_menu.add_command(label="Set School", command=set_school)
-settings_menu.add_command(label="Set Website", command=set_website)
 #add file men to main menu
 menubar.add_cascade(label="Settings", menu=settings_menu)
 #display menu
@@ -221,5 +171,3 @@ master.geometry("%dx%d+0+0" % (w, h))
 
 master.mainloop()
 master.destroy()
-
-
